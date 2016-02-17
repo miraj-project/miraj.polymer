@@ -1,7 +1,7 @@
-polymer/core
+miraj/polymer
 ----------------------
 
-Polymer Core
+Polymer core functionality
 
 A Polymer "behavior" is essentially a web component without a co-dom.
 

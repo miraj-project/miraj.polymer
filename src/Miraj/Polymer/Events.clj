@@ -1,4 +1,4 @@
-(ns Miraj.Polymer.Events
+(ns miraj.polymer.Events
   (:refer-clojure :exclude [load]))
 
 ;; (defprotocol ^{:resource-type :polymer-events

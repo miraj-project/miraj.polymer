@@ -1,4 +1,4 @@
-(ns Miraj.Polymer.Behaviors)
+(ns miraj.polymer.Behaviors)
 
 ;; (alter-meta! *ns*
 ;;              (fn [m] (assoc m :co-ns true

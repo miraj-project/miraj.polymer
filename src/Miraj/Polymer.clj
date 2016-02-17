@@ -1,4 +1,4 @@
-(ns Miraj.Polymer)
+(ns miraj.Polymer)
 
 #_(alter-meta! *ns*
              (fn [m] (assoc m
