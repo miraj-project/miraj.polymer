@@ -1,0 +1,69 @@
+polymer/core
+----------------------
+
+Polymer Core
+
+A Polymer "behavior" is essentially a web component without a co-dom.
+
+In the language of miraj, a web component is a co-type, so a behavior
+is a co-type without a co-dom.
+
+defpolymer is our constructor; given a co-dom it creates a Polymer web
+component, otherwise it creates a Polymer behavior object.
+
+Clojure deftypes have fields and methods.  miraj co-types have
+functional and co-functional operations.  We treat fields not as data
+(state) but as (co-)channels, or ports, and we associate with them
+co-functions (named co-operations) that observe external behavior.
+
+Lifecycle methods are treated as a co-protocol: a list of
+co-functional operation signatures for which a co-type may or may not
+implement an observing co-function.  They're co-functional because
+they are never invoked internally.  So when the runtime calls e.g. the
+'created' callback, this is equivalent to the program observing a
+behavior on the 'created' port/channel.
+
+Similarly, we treat events as ports to be observed.
+
+Example: the Polymer.Lifecycle co-protocol declares a 'created'
+signature.  This makes 'created' a channel (maybe we should call it
+that instead of 'signature'?)  Now when we attach an operation
+definition to that channel we're implicitly observing the inport of
+the channel - the operation will be called when something is observed
+on the channel, which is what makes it a co-function.
+
+Symmetrically, an external process can treat 'created' as a callback
+function and "call" it; conceptually, we treat this as exhibition of a
+behavior on the channel.
+
+The virtue of this approach is that it provides a uniform conceptual
+structure for callbacks, listeners, network stuff, etc.  It exposes
+the deep and beautiful symmetries at work: function and co-function,
+protocol and co-protocol, typee and co-type, etc. and co-etc.
+
+However, to support Polymer we need to expose a bit of implementation
+detail.  For example, for Polymer there is a difference between a
+property change observer and an event listener. In miraj there's no
+such difference; properties and events are both expressed using
+defcoprotocol.  But in order to generate the correct Polymer code we
+need a way to tell them apart.
+
+What's the difference between 'created' and 'clicked'?  None,
+structurally.  It's just that Polymer forces us to make a distinction
+between event and handler for e.g. clicks, but not for lifecycle
+methods.
+
+Simplest I can think of for now: annotate event-based coprototypes
+with :event or the like.  Unfortunately this suggests that there are
+two kinds of co-protocol, one for event ops and one for other ops.
+
+The concept of a co-protocol lets us unify at least three things that
+Polyerm/JS treats as distinct:
+
+   * events and event handlers
+   * properties and property change observers
+   * networking result and events
+
+# usage
+
+link:http://clojars.org/polymer/paper[image:http://clojars.org/polymer/paper/latest-version.svg[]]
