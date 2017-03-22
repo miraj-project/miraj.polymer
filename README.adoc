@@ -1,0 +1,3 @@
+= Polymer core
+
+Polymer-specific elements, e.g. dom-if, dom-repeat, etc.
