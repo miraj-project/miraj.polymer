@@ -2,7 +2,7 @@
   "Polymer Data-binding Helpers
 
   https://www.polymer-project.org/2.0/docs/devguide/templates"
-  (:refer-clojure :exclude [for])
+  (:refer-clojure :exclude [for repeat])
   (:require [miraj.co-dom :as codom :refer [element]]
             [clojure.tools.logging :as log :only [trace debug error warn info]]))
 
@@ -20,12 +20,11 @@
 
 
 (defmacro lambda
-  "Wrapper on <dom-bind><template>...
+   "Wrapper on <dom-bind>. args is a vector of symbols, with optional keyword :two-way, and will be used to construct a let-expression. Symbols preceding :two-way will be bound to one-way binding annotation, e.g. [foo] => [foo \"[[foo]]\"]. Symbols following :two-way will be bound to two-way binding annotation, e.g. [:two-way foo] => [foo \"{{foo}}\"]. body will be evaluated with reconstructed let bindings and wrapped in <template is=\"dom-bind\">.
 
   https://www.polymer-project.org/2.0/docs/devguide/templates#array-selector"
-  [& args]
-  (log/info "LAMBDA args:" args)
-  (let [argvec (first args)
+  [args & body]
+  (let [argvec args
         _ (if (not (vector? argvec)) (throw (Exception. "First arg to miraj.polymer.dom/lambda must be a vector")))
         [oneway x twoway] (if (= :two-way (first argvec))
                             [nil nil (rest argvec)]
@@ -33,23 +32,12 @@
         oneway (into [] (mapcat identity (clojure.core/for [arg oneway] [arg (str "[[" arg "]]")])))
         twoway (into [] (mapcat identity (clojure.core/for [arg twoway] [arg (str "{{" arg "}}")])))
         newvec (concat oneway twoway)
-        body (rest args)
+        ;; body (rest args)
         ]
     `(binding [*ns* ~*ns*]
        (let [~@newvec]
          (codom/element :template {:is "dom-bind"} ~@body)))))
 
-
-    ;; `(fn []
-    ;;    (let [;; content# ~args
-    ;;          ;; template# ~(apply codom/element :template {:is "dom-bind"} content)
-    ;;          ;; _# (log/info "LAMBDA TEMPLATE:" template#)
-    ;;          ;; dom# (codom/element :dom-bind template#)
-    ;;          ]
-    ;;      ;; (log/info "LAMBDA BIND:" dom#)
-    ;;      (apply codom/element :template {:is "dom-bind"} (rest args)) ;; content)
-    ;;      ;; dom-bind
-    ;;      #_template#))))
 
 (alter-meta! (find-var (symbol (str *ns*) "lambda"))
              (fn [old new] (merge old new))
@@ -57,14 +45,6 @@
                             :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
                                            :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}}})
-                            ;; :miraj/co-fn true
-                            ;; :miraj/element true
-                            ;; :miraj/html-tag :array-selector
-                            ;; :miraj/lib :miraj.polymer
-                            ;; :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/lib/elements/array-selector.html"
-                            ;;                :miraj/version "1.8.1"
-                            ;;                :miraj/bower "Polymer/polymer"}
-                            ;; }})
 
 ;;;;;;;; COMPONENT: miraj.polymer/selected-items ;;;;;;;;;;;;;;;;
 (defn selection
