@@ -1,38 +1,86 @@
-(ns miraj.polymer
+(ns miraj.polymer.dom
   "Polymer Data-binding Helpers
 
   https://www.polymer-project.org/2.0/docs/devguide/templates"
   (:refer-clojure :exclude [for])
-  (:require [miraj.co-dom :as codom :refer [element]]))
+  (:require [miraj.co-dom :as codom :refer [element]]
+            [clojure.tools.logging :as log :only [trace debug error warn info]]))
 
-;;(println "loading miraj.polymer")
+;;(println "loading miraj.polymer.dom")
 
 (alter-meta! *ns* (fn [m] (assoc m :miraj/miraj {:miraj/elements true
                                                  :miraj/nss '[]
                                                  :miraj/codom ""
-                                                 :miraj/polymer-version "2.0.0-rc.3"
+                                                 :miraj/polymer-version "1.8.1"
                                                  :miraj/assets
                                                  {:miraj/bower
                                                   [
                                                    ]
-                                                   :miraj/base "/bower_components/"}})))
+                                                   :miraj/base "/miraj/polymer/assets/"}})))
 
+
+(defmacro lambda
+  "Wrapper on <dom-bind><template>...
+
+  https://www.polymer-project.org/2.0/docs/devguide/templates#array-selector"
+  [& args]
+  (log/info "LAMBDA args:" args)
+  (let [argvec (first args)
+        _ (if (not (vector? argvec)) (throw (Exception. "First arg to miraj.polymer.dom/lambda must be a vector")))
+        [oneway x twoway] (if (= :two-way (first argvec))
+                            [nil nil (rest argvec)]
+                            (partition-by #(= :two-way %) argvec))
+        oneway (into [] (mapcat identity (clojure.core/for [arg oneway] [arg (str "[[" arg "]]")])))
+        twoway (into [] (mapcat identity (clojure.core/for [arg twoway] [arg (str "{{" arg "}}")])))
+        newvec (concat oneway twoway)
+        body (rest args)
+        ]
+    `(binding [*ns* ~*ns*]
+       (let [~@newvec]
+         (codom/element :template {:is "dom-bind"} ~@body)))))
+
+
+    ;; `(fn []
+    ;;    (let [;; content# ~args
+    ;;          ;; template# ~(apply codom/element :template {:is "dom-bind"} content)
+    ;;          ;; _# (log/info "LAMBDA TEMPLATE:" template#)
+    ;;          ;; dom# (codom/element :dom-bind template#)
+    ;;          ]
+    ;;      ;; (log/info "LAMBDA BIND:" dom#)
+    ;;      (apply codom/element :template {:is "dom-bind"} (rest args)) ;; content)
+    ;;      ;; dom-bind
+    ;;      #_template#))))
+
+(alter-meta! (find-var (symbol (str *ns*) "lambda"))
+             (fn [old new] (merge old new))
+             {:miraj/miraj {:miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
+                                           :miraj/bower "Polymer/polymer"}}})
+                            ;; :miraj/co-fn true
+                            ;; :miraj/element true
+                            ;; :miraj/html-tag :array-selector
+                            ;; :miraj/lib :miraj.polymer
+                            ;; :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/lib/elements/array-selector.html"
+                            ;;                :miraj/version "1.8.1"
+                            ;;                :miraj/bower "Polymer/polymer"}
+                            ;; }})
 
 ;;;;;;;; COMPONENT: miraj.polymer/selected-items ;;;;;;;;;;;;;;;;
-(defn selected-items
+(defn selection
   "<array-selector> links data binding for arrays..
 
   https://www.polymer-project.org/2.0/docs/devguide/templates#array-selector"
   [& args]
   (apply codom/element :array-selector args))
-(alter-meta! (find-var (symbol (str *ns*) "selected-items"))
+(alter-meta! (find-var (symbol (str *ns*) "selection"))
              (fn [old new] (merge old new))
              {:miraj/miraj {:miraj/co-fn true
                             :miraj/element true
                             :miraj/html-tag :array-selector
                             :miraj/lib :miraj.polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/array-selector.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/api/"}})
 
@@ -49,8 +97,8 @@
                             :miraj/element true
                             :miraj/html-tag :dom-bind
                             :miraj/lib :polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/dom-bind.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#dom-bind"}})
 
@@ -67,8 +115,8 @@
                             :miraj/element true
                             :miraj/html-tag :dom-if
                             :miraj/lib :polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/dom-if.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#dom-if"}})
 
@@ -85,8 +133,8 @@
                             :miraj/element true
                             :miraj/html-tag :dom-module
                             :miraj/lib :miraj.polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/dom-module.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#dom-module"}})
 
@@ -103,8 +151,8 @@
                             :miraj/element true
                             :miraj/html-tag :dom-repeat
                             :miraj/lib :polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/dom-repeat.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#dom-repeat"}})
 
@@ -121,7 +169,7 @@
                             :miraj/element true
                             :miraj/html-tag :custom-style
                             :miraj/lib :polymer
-                            :miraj/assets {:miraj/href "/bower_components/polymer/lib/elements/custom-style.html"
-                                           :miraj/version "2.0.0-rc.3"
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#custom-style"}})
