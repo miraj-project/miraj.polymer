@@ -51,20 +51,6 @@
         (install)
         (target)))
 
-(deftask demos
-  "build component demos"
-  []
-  ;;(set-env! :source-paths #(conj % "demos/clj"))
-  (comp
-   ;; (build)
-   (watch)
-   (miraj/compile :pages true :debug true :keep true)
-   ;; (miraj/link    :pages true :debug true) ;; :keep true)
-   ;; (miraj/demo-page :debug true)
-   ;; (cljs)
-   ;; (boot/sift :to-resource #{#".*\.cljs\.edn"}) ;; keep main.cljs.edn, produced by (cljs)
-   (target   :no-clean   true)))
-
 (deftask check
   "watch etc. for dev as a checkout"
   []
