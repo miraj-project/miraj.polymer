@@ -1,0 +1,32 @@
+<style is="custom-style">
+  .vertical-section {
+  @apply(--paper-font-body1);
+
+  line-height: 40px;
+  }
+
+  code {
+  color: var(--google-grey-700);
+  }
+
+  input[is=iron-input] {
+  width: 100%;
+  box-sizing: border-box;
+  }
+
+  input, button {
+  font-size: 20px;
+  padding: 0.2em;
+  }
+</style>
+
+<script type="text/javascript">
+    var scope = document.querySelector('template[is=dom-bind]');
+
+    scope.setValue = function(event) {
+      if (!(event.target instanceof HTMLButtonElement)) {
+        return;
+      }
+      document.querySelector('input[is=iron-input]')[event.target.value] = event.target.previousElementSibling.value;
+    }
+</script>
