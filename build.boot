@@ -38,8 +38,8 @@
  pom {:project +project+
       :version +version+
       :description "Miraj Polymer Helper Element functions"
-       :url "https://github.com/mobileink/miraj-project/polymer-dom"
-       :scm         {:url "https://github.com/miraj-project/polymer-dom.git"}
+       :url       "https://github.com/miraj-project/polymer-dom"
+       :scm {:url "https://github.com/miraj-project/polymer-dom.git"}
        :license     {"EPL" "http://www.eclipse.org/legal/epl-v10.html"}}
  jar {:manifest {"root" "miraj"}})
 
