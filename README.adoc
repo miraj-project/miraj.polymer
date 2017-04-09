@@ -1,3 +1,3 @@
-= Polymer core
+= miraj.polymer/dom
 
-Polymer-specific elements, e.g. dom-if, dom-repeat, etc.
+Miraj implementation of https://www.polymer-project.org/2.0/docs/devguide/templates[Polymer "helper" elements], e.g. dom-if, dom-repeat, etc.
