@@ -1,12 +1,15 @@
-(ns miraj.polymer.dom
-  "Polymer Data-binding Helpers
+;; these namespaces are for qualifying keywords (do we need this?)
+(ns miraj.polymer.binding.one)
+(ns miraj.polymer.binding.two)
 
-  https://www.polymer-project.org/2.0/docs/devguide/templates"
+;; this is the ns of this file
+(ns miraj.polymer
+  "Polymer functions and helpers"
   (:refer-clojure :exclude [for repeat])
   (:require [miraj.co-dom :as codom :refer [element]]
             [clojure.tools.logging :as log :only [trace debug error warn info]]))
 
-;;(println "loading miraj.polymer.dom")
+;;(println "loading miraj.polymer")
 
 (alter-meta! *ns* (fn [m] (assoc m :miraj/miraj {:miraj/elements true
                                                  :miraj/nss '[]
@@ -17,6 +20,49 @@
                                                   [
                                                    ]
                                                    :miraj/base "/miraj/polymer/assets/"}})))
+
+(defn bind!
+  "one-way property binding"
+  [sym]
+  (str "[[" (name sym) "]]"))
+  ;;(keyword "miraj.polymer.binding.one" (name sym)))
+
+(defn bind!!
+  "two-way property binding"
+  [sym]
+  (str "{{" (name sym) "}}"))
+
+(defn bind-attr!
+  "one-way attribute binding"
+  [sym]
+  (keyword "miraj.polymer.binding.attr.one" (name sym)))
+
+(defn bind-attr!!
+  "two-way attribute binding"
+  [sym]
+  (keyword "miraj.polymer.binding.attr.two" (name sym)))
+
+
+;;;;;;;; COMPONENT: miraj.polymer/slot ;;;;;;;;;;;;;;;;
+(defn slot
+  "<slot> - component composition"
+  [& args]
+  (apply codom/element :slot args))
+#_(alter-meta! (find-var (symbol (str *ns*) "selection"))
+             (fn [old new] (merge old new))
+             {:miraj/miraj {:miraj/co-fn true
+                            :miraj/element true
+                            :miraj/html-tag :array-selector
+                            :miraj/lib :miraj.polymer
+                            :miraj/assets {:miraj/href "/miraj/polymer/assets/polymer/polymer.html"
+                                           :miraj/version "1.8.1"
+                                           :miraj/bower "Polymer/polymer"}
+                            :miraj/help "https://www.polymer-project.org/2.0/docs/api/"}})
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Polymer Helper Elements
+;;  https://www.polymer-project.org/2.0/docs/devguide/templates"
 
 
 (defmacro lambda
@@ -37,7 +83,6 @@
     `(binding [*ns* ~*ns*]
        (let [~@newvec]
          (codom/element :template {:is "dom-bind"} ~@body)))))
-
 
 (alter-meta! (find-var (symbol (str *ns*) "lambda"))
              (fn [old new] (merge old new))
@@ -153,3 +198,5 @@
                                            :miraj/version "1.8.1"
                                            :miraj/bower "Polymer/polymer"}
                             :miraj/help "https://www.polymer-project.org/2.0/docs/devguide/templates#custom-style"}})
+
+;;(println "loaded miraj.polymer")
