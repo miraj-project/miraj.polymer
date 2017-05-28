@@ -1,20 +1,21 @@
-(def +project+ 'miraj.polymer/dom)
-(def +version+ "1.8.1-SNAPSHOT")
+(def +project+ 'miraj/polymer)
+(def +version+ "1.0.0-SNAPSHOT")
 
 (set-env!
  :resource-paths #{"src/main/clj"}
 
  ;; :checkouts '[[miraj/co-dom                  "1.0.0-SNAPSHOT"]
  ;;              ;; [miraj/html                    "5.1.0-SNAPSHOT"]
- ;;              [miraj/core                    "0.1.0-SNAPSHOT"]
+ ;;              [miraj/core                    "1.0.0-SNAPSHOT"]
  ;;              ]
 
  :repositories #(conj % ["clojars" {:url "https://clojars.org/repo/"}])
 
- :dependencies '[[miraj/co-dom               "1.0.0-SNAPSHOT"]
+ :dependencies '[[org.clojure/clojure "1.9.0-alpha17"]
+                 [miraj/co-dom               "1.0.0-SNAPSHOT"]
 
                  ;; testing
-                 [miraj/core                    "0.1.0-SNAPSHOT" :scope "test"]
+                 [miraj/core                    "1.0.0-SNAPSHOT" :scope "test"]
                  [miraj/html                    "5.1.0-SNAPSHOT" :scope "test"]
                  [miraj.polymer/iron            "1.2.3-SNAPSHOT" :scope "test"]
                  [miraj.polymer/paper           "1.2.3-SNAPSHOT" :scope "test"]
@@ -37,9 +38,9 @@
  repl {:port 8080}
  pom {:project +project+
       :version +version+
-      :description "Miraj Polymer Helper Element functions"
-       :url       "https://github.com/miraj-project/polymer-dom"
-       :scm {:url "https://github.com/miraj-project/polymer-dom.git"}
+      :description "Miraj Polymer functions and elements"
+       :url       "https://github.com/miraj-project/polymer"
+       :scm {:url "https://github.com/miraj-project/polymer.git"}
        :license     {"EPL" "http://www.eclipse.org/legal/epl-v10.html"}}
  jar {:manifest {"root" "miraj"}})
 
