@@ -3,3 +3,31 @@
 Miraj implementation of https://www.polymer-project.org/2.0/docs/devguide/templates[Polymer "helper" elements], e.g. dom-if, dom-repeat, etc.
 
 Support for polymer protocols and behaviors
+
+=== Status
+
+Version 1 of the Miraj libraries supports version 1.x of Polymer,
+which supports v0 of the Web Component standards.
+
+Since v0 is now obsolete, and Polymer 2.0 supports v1 of the standards
+(which have for the most part been officially endorsed by the major
+browswer vendors), no effort will be made to add support for any
+Polymer 1.x (WC v0) functionality already supported.  All development effort (aside from bug fixes) will be devoted to migrating to version 2.0 with support for web components v1.
+
+See:
+
+https://www.webcomponents.org/introduction#specifications[Web Component Specifications]
+
+https://hayato.io/2016/shadowdomv1/[What's New in Shadow DOM v1 (by examples)] "... attempt to track the difference between Shadow DOM v0 and v1."
+
+https://developers.google.com/web/fundamentals/getting-started/primers/customelements[Custom Elements v1: Reusable Web Components]
+
+=== Currently Unsupported:
+
+* https://www.polymer-project.org/1.0/docs/devguide/registering-elements#type-extension[Extend native HTML Elements]
+
+* https://www.polymer-project.org/1.0/docs/devguide/behaviors#defining-behaviors[Defining Behaviors]
+
+* Element-specific event listeners, using dotted notation.  We use
+  protocols to organize event handlers, but have not come up with a
+  good way to tie to elements contained in the codom.
