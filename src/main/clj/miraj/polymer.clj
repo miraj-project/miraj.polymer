@@ -21,26 +21,38 @@
                                                    ]
                                                    :miraj/base "/miraj/polymer/assets/"}})))
 
+(defn- get-binding-sym
+  [sym]
+  (let [s (subs (str sym) 1)
+        parts (clojure.string/split s #"->")]
+    (cond
+      (> (count parts) 2) (throw (Exception. (str "too many -> parts in expr " sym)))
+      (= (count parts) 2) (str (last parts) "::" (first parts))
+      :else s)))
+
 (defn bind!
   "one-way property binding"
   [sym]
-  (str "[[" (name sym) "]]"))
-  ;;(keyword "miraj.polymer.binding.one" (name sym)))
+  (let [prop (get-binding-sym sym)]
+    (str "[[" prop "]]")))
 
 (defn bind!!
   "two-way property binding"
   [sym]
-  (str "{{" (name sym) "}}"))
+  (let [prop (get-binding-sym sym)]
+    (str "{{" prop "}}")))
 
 (defn bind-attr!
   "one-way attribute binding"
   [sym]
-  (keyword "miraj.polymer.binding.attr.one" (name sym)))
+  (let [prop (get-binding-sym sym)]
+  (keyword "miraj.polymer.binding.attr.one" prop)))
 
 (defn bind-attr!!
   "two-way attribute binding"
   [sym]
-  (keyword "miraj.polymer.binding.attr.two" (name sym)))
+  (let [prop (get-binding-sym sym)]
+    (keyword "miraj.polymer.binding.attr.two" prop)))
 
 
 ;;;;;;;; COMPONENT: miraj.polymer/slot ;;;;;;;;;;;;;;;;
