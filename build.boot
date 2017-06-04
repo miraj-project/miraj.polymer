@@ -15,23 +15,23 @@
                  [miraj/co-dom               "1.0.0-SNAPSHOT"]
 
                  ;; testing
-                 [miraj/core                    "1.0.0-SNAPSHOT" :scope "test"]
-                 [miraj/html                    "5.1.0-SNAPSHOT" :scope "test"]
-                 [miraj.polymer/iron            "1.2.3-SNAPSHOT" :scope "test"]
-                 [miraj.polymer/paper           "1.2.3-SNAPSHOT" :scope "test"]
+                 ;; [miraj/core                    "1.0.0-SNAPSHOT" :scope "test"]
+                 ;; [miraj/html                    "5.1.0-SNAPSHOT" :scope "test"]
+                 ;; [miraj.polymer/iron            "1.2.3-SNAPSHOT" :scope "test"]
+                 ;; [miraj.polymer/paper           "1.2.3-SNAPSHOT" :scope "test"]
                  ;; [miraj/boot-miraj "0.1.0-SNAPSHOT"]
                  ;; [adzerk/boot-cljs "1.7.228-1" :scope "test"]
                  ;; [adzerk/boot-cljs-repl "0.3.0" :scope "test"]
 
 
                  [miraj/boot-miraj           "0.1.0-SNAPSHOT" :scope "test"]
-                 [pandeiro/boot-http "0.7.3"           :scope "test"]
-                 [samestep/boot-refresh "0.1.0" :scope "test"]
+                 ;; [pandeiro/boot-http "0.7.3"           :scope "test"]
+                 ;; [samestep/boot-refresh "0.1.0" :scope "test"]
                  [adzerk/boot-test "1.0.7" :scope "test"]])
 
 (require '[miraj.boot-miraj :as miraj]
-         '[samestep.boot-refresh :refer [refresh]]
-         '[pandeiro.boot-http :as http :refer :all]
+         ;; '[samestep.boot-refresh :refer [refresh]]
+         ;; '[pandeiro.boot-http :as http :refer :all]
          '[adzerk.boot-test :refer [test]])
 
 (task-options!
@@ -42,38 +42,49 @@
        :url       "https://github.com/miraj-project/polymer"
        :scm {:url "https://github.com/miraj-project/polymer.git"}
        :license     {"EPL" "http://www.eclipse.org/legal/epl-v10.html"}}
- jar {:manifest {"root" "miraj"}})
+ jar {:manifest {"root" "miraj"}}
+ push {:repo "clojars"})
 
 (deftask build
   "build"
   []
   (comp (pom)
-        (jar)
-        (install)
-        (target)))
+        (jar)))
+
+(deftask install-local
+  "build"
+  []
+  (comp (build)
+        (target)
+        (install)))
+
+(deftask deploy
+  "deploy to clojars"
+  []
+  (comp (install-local)
+        (push)))
 
 (deftask check
   "watch etc. for dev as a checkout"
   []
   (comp (watch)
         (notify :audible true)
-        (pom)
-        (jar)
+        (build)
         (target)
         (install)))
 
-(deftask systest
-  "serve and repl for integration testing; run this, then eval test/system/clj code using cider"
-  []
-  (set-env! :resource-paths #(conj % "test/system/clj"))
-  (comp
-   (build)
-   (serve :dir "target")
-   (cider)
-   (repl)
-   (watch)
-   (notify :audible true)
-   (target)))
+;; (deftask systest
+;;   "serve and repl for integration testing; run this, then eval test/system/clj code using cider"
+;;   []
+;;   (set-env! :resource-paths #(conj % "test/system/clj"))
+;;   (comp
+;;    (build)
+;;    (serve :dir "target")
+;;    (cider)
+;;    (repl)
+;;    (watch)
+;;    (notify :audible true)
+;;    (target)))
 
 (deftask utest
   "run unit tests"
