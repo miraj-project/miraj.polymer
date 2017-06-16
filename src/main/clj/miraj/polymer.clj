@@ -46,20 +46,24 @@
   "one-way attribute binding"
   [sym]
   (let [prop (get-binding-sym sym)]
-  (keyword "miraj.polymer.binding.attr.one" prop)))
+  (str "[[miraj.polymer.binding.attr.one/" prop "]]")))
 
 (defn bind-attr!!
   "two-way attribute binding"
   [sym]
   (let [prop (get-binding-sym sym)]
-    (keyword "miraj.polymer.binding.attr.two" prop)))
+    (str  "{{miraj.polymer.binding.attr.two/" prop "}}")))
 
 
 ;;;;;;;; COMPONENT: miraj.polymer/slot ;;;;;;;;;;;;;;;;
 (defn slot
   "<slot> - component composition"
   [& args]
-  (apply codom/element :slot args))
+  ;; Polymer v1:
+  (apply codom/element :content args))
+  ;; Polymer v2:
+  ;; (apply codom/element :slot args))
+
 #_(alter-meta! (find-var (symbol (str *ns*) "selection"))
              (fn [old new] (merge old new))
              {:miraj/miraj {:miraj/co-fn true
